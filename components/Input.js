@@ -12,6 +12,7 @@ export default function Input({shouldAutoFocus}) {
         style={{ borderBottomColor: "purple", borderBottomWidth: 2 }}
         value={text}
         onChangeText={newText => setText(newText)}
+        autoFocus={shouldAutoFocus}
       />
     </View>
   )
