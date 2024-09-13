@@ -14,6 +14,7 @@ export default function Input({shouldAutoFocus}) {
         onChangeText={newText => setText(newText)}
         autoFocus={shouldAutoFocus}
       />
+      <Text>{text.length || ""}</Text>
     </View>
   )
 }
