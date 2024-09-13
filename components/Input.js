@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 export default function Input({shouldAutoFocus}) {
   const [text, setText] = useState("");
-
+  const [isFocused, setIsFocused] = useState(shouldAutoFocus);
   return (
     <View>
       <TextInput
@@ -13,8 +13,10 @@ export default function Input({shouldAutoFocus}) {
         value={text}
         onChangeText={newText => setText(newText)}
         autoFocus={shouldAutoFocus}
+        onFocus={() => {setIsFocused(true)}}
+        onBlur={() => {setIsFocused(false)}}
       />
-      <Text>{text.length || ""}</Text>
+      <Text>{isFocused ? (text.length || "") : (text.length < 3 ? "Please type more than 3 characters" : "Thank you")}</Text>
     </View>
   )
 }
