@@ -10,7 +10,7 @@ export default function Input({shouldAutoFocus, inputHandler, isModalVisible}) {
   }
 
   return (
-    <Modal animationType="slide" visible={isModalVisible} transparent={true}>
+    <Modal animationType="slide" visible={isModalVisible}>
       <View style={styles.container}>
         <TextInput
           placeholder="Type Something"

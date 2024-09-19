@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 export default function App() {
   const [receivedData, setReceivedData] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const appName = "My app";
 
   const handleInputData = (data) => {
@@ -20,9 +20,9 @@ export default function App() {
       <StatusBar style="auto" />
       <View style={styles.topView}>
         <Header name={appName} />
-        <Button title="Add a Goal" onPress={() => setModalVisible(true)} />
+        <Button title="Add a Goal" onPress={() => setIsModalVisible(true)} />
       </View>
-      <Input shouldAutoFocus={true} inputHandler={handleInputData} isModalVisible={modalVisible} />
+      <Input shouldAutoFocus={true} inputHandler={handleInputData} isModalVisible={isModalVisible} />
       <View style={styles.bottomView}>
         <Text style={styles.text}>{receivedData}</Text>
       </View>
