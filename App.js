@@ -12,7 +12,7 @@ export default function App() {
   const handleInputData = (data) => {
     console.log("App ", data);
     setReceivedData(data);
-    setModalVisible(false);
+    setIsModalVisible(false);
   }
 
   return (
