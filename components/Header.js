@@ -11,9 +11,9 @@ export default function Header({name}) {
 
 const styles = StyleSheet.create({
   text: {
-    color: "darkmagenta",
+    color: "purple",
     fontSize: 25,
-    borderColor: "darkmagenta",
+    borderColor: "purple",
     borderWidth: 2,
     padding: 5,
     marginBottom: 10,

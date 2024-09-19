@@ -34,7 +34,7 @@ export default function Input({shouldAutoFocus, inputHandler, isModalVisible}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fcf",
     alignItems: "center",
     justifyContent: "center",
   },

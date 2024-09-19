@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   topView: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
   },
   bottomView: {
     flex: 4,
