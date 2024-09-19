@@ -1,9 +1,14 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 
 export default function Input({shouldAutoFocus}) {
   const [text, setText] = useState("");
   const [isFocused, setIsFocused] = useState(shouldAutoFocus);
+
+  const handleConfirm = () => {
+    console.log(text)
+  }
+
   return (
     <View>
       <TextInput
@@ -17,6 +22,7 @@ export default function Input({shouldAutoFocus}) {
         onBlur={() => {setIsFocused(false)}}
       />
       <Text>{isFocused ? (text.length || "") : (text.length < 3 ? "Please type more than 3 characters" : "Thank you")}</Text>
+      <Button title="Confirm" onPress={handleConfirm} />
     </View>
   )
 }
