@@ -34,7 +34,7 @@ export default function Input({shouldAutoFocus, cancelHandler, inputHandler, isM
             <Button title="Cancel" onPress={handleCancel} />
           </View>
           <View style={styles.buttonContainer}>
-            <Button title="Confirm" onPress={handleConfirm} />
+            <Button title="Confirm" onPress={handleConfirm} disabled={text.length < 3} />
           </View>
         </View>
       </View>
