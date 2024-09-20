@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import Header from './components/Header';
 import Input from './components/Input';
 import { useState } from 'react';
@@ -8,6 +8,18 @@ export default function App() {
   const [receivedData, setReceivedData] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const appName = "My app";
+
+  const handleAlert = () => {
+    Alert.alert("Dismiss the modal?", "Are you sure you want to dismiss the modal?", [
+      {
+        text: "cancel",
+      },
+      {
+        text: "ok",
+        onPress: () => setIsModalVisible(false),
+      }
+    ])
+  }
 
   const handleInputData = (data) => {
     console.log("App ", data);
@@ -22,7 +34,12 @@ export default function App() {
         <Header name={appName} />
         <Button title="Add a Goal" onPress={() => setIsModalVisible(true)} />
       </View>
-      <Input shouldAutoFocus={true} inputHandler={handleInputData} isModalVisible={isModalVisible} />
+      <Input
+        shouldAutoFocus={true}
+        inputHandler={handleInputData}
+        cancelHandler={handleAlert}
+        isModalVisible={isModalVisible}
+      />
       <View style={styles.bottomView}>
         <Text style={styles.text}>{receivedData}</Text>
       </View>
