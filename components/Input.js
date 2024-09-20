@@ -6,10 +6,12 @@ export default function Input({shouldAutoFocus, cancelHandler, inputHandler, isM
   const [isFocused, setIsFocused] = useState(shouldAutoFocus);
 
   const handleConfirm = () => {
+    setText("");
     inputHandler(text);
   }
 
   const handleCancel = () => {
+    setText("");
     cancelHandler();
   }
 
