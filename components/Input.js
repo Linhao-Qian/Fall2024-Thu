@@ -27,11 +27,13 @@ export default function Input({shouldAutoFocus, cancelHandler, inputHandler, isM
           onBlur={() => {setIsFocused(false)}}
         />
         <Text>{isFocused ? (text.length || "") : (text.length < 3 ? "Please type more than 3 characters" : "Thank you")}</Text>
-        <View style={styles.buttonContainer}>
-          <Button title="Cancel" onPress={handleCancel} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button title="Confirm" onPress={handleConfirm} />
+        <View style={styles.buttonGroups}>
+          <View style={styles.buttonContainer}>
+            <Button title="Cancel" onPress={handleCancel} />
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button title="Confirm" onPress={handleConfirm} />
+          </View>
         </View>
       </View>
     </Modal>
@@ -50,6 +52,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 5,
     color: "blue",
+  },
+  buttonGroups: {
+    flexDirection: "row",
+    gap: 16,
   },
   buttonContainer: {
     width: "30%",
