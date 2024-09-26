@@ -51,7 +51,8 @@ export default function App() {
           contentContainerStyle={styles.scrollViewContent}
           data={goals}
           renderItem={({item}) => <GoalItem item={item} deleteHandler={handleGoalDelete} />}
-          ListEmptyComponent={<Text style={styles.emptyText}>No goals to show</Text>}
+          ListEmptyComponent={<Text style={styles.listText}>No goals to show</Text>}
+          ListHeaderComponent={goals.length > 0 && <Text style={styles.listText}>My goals</Text>}
         />
         {/* <ScrollView contentContainerStyle={styles.scrollViewContent}>
           {goals.map((goalObj) => (
@@ -75,7 +76,6 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     alignItems: "center",
   },
-  
   topView: {
     flex: 1,
     alignItems: "center",
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     flex: 4,
     backgroundColor: "#dcd",
   },
-  emptyText: {
+  listText: {
     color: "purple",
     fontSize: 20,
     margin: 5,
