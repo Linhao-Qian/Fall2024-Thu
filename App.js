@@ -1,8 +1,9 @@
 import { StatusBar } from "expo-status-bar";
-import { Alert, Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Button, SafeAreaView, ScrollView, FlatList, StyleSheet, Text, View } from 'react-native';
 import Header from './components/Header';
 import Input from './components/Input';
 import { useState } from 'react';
+import GoalItem from "./components/GoalItem";
 
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -42,13 +43,18 @@ export default function App() {
         isModalVisible={isModalVisible}
       />
       <View style={styles.bottomView}>
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <FlatList
+          contentContainerStyle={styles.scrollViewContent}
+          data={goals}
+          renderItem={({item}) => <GoalItem item={item} />}
+        />
+        {/* <ScrollView contentContainerStyle={styles.scrollViewContent}>
           {goals.map((goalObj) => (
             <View key={goalObj.id} style={styles.textContainer}>
               <Text style={styles.text}>{goalObj.text}</Text>
             </View>
           ))}
-        </ScrollView>
+        </ScrollView> */}
       </View>
     </SafeAreaView>
   );
@@ -64,11 +70,7 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     alignItems: "center",
   },
-  text: {
-    color: "purple",
-    fontSize: 50,
-    padding: 50,
-  },
+  
   topView: {
     flex: 1,
     alignItems: "center",
@@ -78,9 +80,4 @@ const styles = StyleSheet.create({
     flex: 4,
     backgroundColor: "#dcd",
   },
-  textContainer: {
-    backgroundColor: "#aaa",
-    borderRadius: 5,
-    marginTop: 5,
-  }
 });
