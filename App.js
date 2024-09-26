@@ -5,8 +5,8 @@ import Input from './components/Input';
 import { useState } from 'react';
 
 export default function App() {
-  const [receivedData, setReceivedData] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [goals, setGoals] = useState([]);
   const appName = "My app";
 
   const handleAlert = () => {
@@ -23,7 +23,8 @@ export default function App() {
 
   const handleInputData = (data) => {
     console.log("App ", data);
-    setReceivedData(data);
+    let newGoal = {text: data , id: Math.random()};
+    setGoals((prevGoals) => [...prevGoals, newGoal]);
     setIsModalVisible(false);
   }
 
@@ -41,9 +42,11 @@ export default function App() {
         isModalVisible={isModalVisible}
       />
       <View style={styles.bottomView}>
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>{receivedData}</Text>
-        </View>
+        {goals.map((goalObj) => (
+          <View key={goalObj.id} style={styles.textContainer}>
+            <Text style={styles.text}>{goalObj.text}</Text>
+          </View>
+        ))}
       </View>
     </SafeAreaView>
   );
@@ -58,9 +61,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "purple",
-    marginVertical: 5,
-    fontSize: 25,
-    padding: 5,
+    fontSize: 50,
+    padding: 50,
   },
   topView: {
     flex: 1,
