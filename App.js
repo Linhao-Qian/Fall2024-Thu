@@ -1,12 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import { Alert, Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Button, SafeAreaView, ScrollView, FlatList, StyleSheet, Text, View } from 'react-native';
 import Header from './components/Header';
 import Input from './components/Input';
 import { useState } from 'react';
+import GoalItem from "./components/GoalItem";
 
 export default function App() {
-  const [receivedData, setReceivedData] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [goals, setGoals] = useState([]);
   const appName = "My app";
 
   const handleAlert = () => {
@@ -23,8 +24,13 @@ export default function App() {
 
   const handleInputData = (data) => {
     console.log("App ", data);
-    setReceivedData(data);
+    let newGoal = {text: data , id: Math.random()};
+    setGoals((prevGoals) => [...prevGoals, newGoal]);
     setIsModalVisible(false);
+  }
+
+  const handleGoalDelete = (deletedId) => {
+    setGoals((prevGoals) => prevGoals.filter((goalObj) => goalObj.id != deletedId));
   }
 
   return (
@@ -41,7 +47,18 @@ export default function App() {
         isModalVisible={isModalVisible}
       />
       <View style={styles.bottomView}>
-        <Text style={styles.text}>{receivedData}</Text>
+        <FlatList
+          contentContainerStyle={styles.scrollViewContent}
+          data={goals}
+          renderItem={({item}) => <GoalItem item={item} deleteHandler={handleGoalDelete} />}
+        />
+        {/* <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          {goals.map((goalObj) => (
+            <View key={goalObj.id} style={styles.textContainer}>
+              <Text style={styles.text}>{goalObj.text}</Text>
+            </View>
+          ))}
+        </ScrollView> */}
       </View>
     </SafeAreaView>
   );
@@ -54,10 +71,10 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     justifyContent: "center",
   },
-  text: {
-    color: "purple",
-    marginVertical: 5,
+  scrollViewContent: {
+    alignItems: "center",
   },
+  
   topView: {
     flex: 1,
     alignItems: "center",
@@ -66,6 +83,5 @@ const styles = StyleSheet.create({
   bottomView: {
     flex: 4,
     backgroundColor: "#dcd",
-    alignItems: "center",
   },
 });
