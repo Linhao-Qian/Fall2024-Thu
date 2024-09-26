@@ -29,6 +29,10 @@ export default function App() {
     setIsModalVisible(false);
   }
 
+  const handleGoalDelete = (deletedId) => {
+    setGoals((prevGoals) => prevGoals.filter((goalObj) => goalObj.id != deletedId));
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
@@ -46,7 +50,7 @@ export default function App() {
         <FlatList
           contentContainerStyle={styles.scrollViewContent}
           data={goals}
-          renderItem={({item}) => <GoalItem item={item} />}
+          renderItem={({item}) => <GoalItem item={item} deleteHandler={handleGoalDelete} />}
         />
         {/* <ScrollView contentContainerStyle={styles.scrollViewContent}>
           {goals.map((goalObj) => (
