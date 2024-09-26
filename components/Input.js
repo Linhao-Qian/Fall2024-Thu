@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
   },
   buttonGroups: {
     flexDirection: "row",
-    gap: 16,
   },
   buttonContainer: {
     width: "30%",
