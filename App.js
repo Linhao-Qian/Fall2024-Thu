@@ -51,6 +51,7 @@ export default function App() {
           contentContainerStyle={styles.scrollViewContent}
           data={goals}
           renderItem={({item}) => <GoalItem item={item} deleteHandler={handleGoalDelete} />}
+          ListEmptyComponent={<Text style={styles.emptyText}>No goals to show</Text>}
         />
         {/* <ScrollView contentContainerStyle={styles.scrollViewContent}>
           {goals.map((goalObj) => (
@@ -84,4 +85,9 @@ const styles = StyleSheet.create({
     flex: 4,
     backgroundColor: "#dcd",
   },
+  emptyText: {
+    color: "purple",
+    fontSize: 20,
+    margin: 5,
+  }
 });
