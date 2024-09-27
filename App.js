@@ -65,7 +65,12 @@ export default function App() {
           renderItem={({item}) => <GoalItem item={item} deleteHandler={handleGoalDelete} />}
           ListEmptyComponent={<Text style={styles.listText}>No goals to show</Text>}
           ListHeaderComponent={goals.length > 0 && <Text style={styles.listText}>My goals</Text>}
-          ListFooterComponent={goals.length > 0 && <Button title="Delete All" onPress={handleDeleteAllAlert} />}
+          ListFooterComponent={goals.length > 0 &&
+            <View style={styles.footer}>
+              <Button title="Delete All" onPress={handleDeleteAllAlert} />
+            </View>
+          }
+          ItemSeparatorComponent={<View style={styles.separatorLine} />}
         />
         {/* <ScrollView contentContainerStyle={styles.scrollViewContent}>
           {goals.map((goalObj) => (
@@ -102,5 +107,15 @@ const styles = StyleSheet.create({
     color: "purple",
     fontSize: 20,
     margin: 5,
-  }
+  },
+  footer: {
+    marginTop: 15,
+  },
+  separatorLine: {
+    flex: 0,
+    marginTop: 15,
+    marginBottom: 10,
+    height: 5,
+    backgroundColor: "#777"
+  },
 });
