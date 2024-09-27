@@ -33,6 +33,18 @@ export default function App() {
     setGoals((prevGoals) => prevGoals.filter((goalObj) => goalObj.id != deletedId));
   }
 
+  const handleDeleteAllAlert = () => {
+    Alert.alert("Delete all?", "Are you sure you want to delete all goals?", [
+      {
+        text: "no",
+      },
+      {
+        text: "yes",
+        onPress: () => setGoals([]),
+      }
+    ])
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
@@ -53,6 +65,7 @@ export default function App() {
           renderItem={({item}) => <GoalItem item={item} deleteHandler={handleGoalDelete} />}
           ListEmptyComponent={<Text style={styles.listText}>No goals to show</Text>}
           ListHeaderComponent={goals.length > 0 && <Text style={styles.listText}>My goals</Text>}
+          ListFooterComponent={goals.length > 0 && <Button title="Delete All" onPress={handleDeleteAllAlert} />}
         />
         {/* <ScrollView contentContainerStyle={styles.scrollViewContent}>
           {goals.map((goalObj) => (
