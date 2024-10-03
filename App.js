@@ -33,6 +33,18 @@ export default function App() {
     setGoals((prevGoals) => prevGoals.filter((goalObj) => goalObj.id != deletedId));
   }
 
+  const handleDeleteAllAlert = () => {
+    Alert.alert("Delete all?", "Are you sure you want to delete all goals?", [
+      {
+        text: "no",
+      },
+      {
+        text: "yes",
+        onPress: () => setGoals([]),
+      }
+    ])
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
@@ -51,6 +63,14 @@ export default function App() {
           contentContainerStyle={styles.scrollViewContent}
           data={goals}
           renderItem={({item}) => <GoalItem item={item} deleteHandler={handleGoalDelete} />}
+          ListEmptyComponent={<Text style={styles.listText}>No goals to show</Text>}
+          ListHeaderComponent={goals.length > 0 && <Text style={styles.listText}>My goals</Text>}
+          ListFooterComponent={goals.length > 0 &&
+            <View style={styles.footer}>
+              <Button title="Delete All" onPress={handleDeleteAllAlert} />
+            </View>
+          }
+          ItemSeparatorComponent={<View style={styles.separatorLine} />}
         />
         {/* <ScrollView contentContainerStyle={styles.scrollViewContent}>
           {goals.map((goalObj) => (
@@ -74,7 +94,6 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     alignItems: "center",
   },
-  
   topView: {
     flex: 1,
     alignItems: "center",
@@ -83,5 +102,20 @@ const styles = StyleSheet.create({
   bottomView: {
     flex: 4,
     backgroundColor: "#dcd",
+  },
+  listText: {
+    color: "purple",
+    fontSize: 20,
+    margin: 5,
+  },
+  footer: {
+    marginTop: 15,
+  },
+  separatorLine: {
+    flex: 0,
+    marginTop: 15,
+    marginBottom: 10,
+    height: 5,
+    backgroundColor: "#777"
   },
 });
