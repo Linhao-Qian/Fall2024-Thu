@@ -39,8 +39,8 @@ export default function Home({navigation}) {
     );
   };
 
-  const handleGoalPress = () => {
-    navigation.navigate("Details");
+  const handleGoalPress = (pressedGoal) => {
+    navigation.navigate("Details", { goalObj: pressedGoal });
   }
 
   const handleDeleteAllAlert = () => {
@@ -73,7 +73,7 @@ export default function Home({navigation}) {
           contentContainerStyle={styles.scrollViewContent}
           data={goals}
           renderItem={({ item }) => (
-            <GoalItem item={item} deleteHandler={handleGoalDelete} pressHandler={handleGoalPress} />
+            <GoalItem goalObj={item} deleteHandler={handleGoalDelete} pressHandler={handleGoalPress} />
           )}
           ListEmptyComponent={
             <Text style={styles.listText}>No goals to show</Text>
