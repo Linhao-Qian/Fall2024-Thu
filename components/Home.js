@@ -5,7 +5,7 @@ import Header from './Header';
 import Input from './Input';
 import GoalItem from "./GoalItem";
 
-export default function Home() {
+export default function Home({navigation}) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
   const appName = "My app";
@@ -39,6 +39,10 @@ export default function Home() {
     );
   };
 
+  const handleGoalPress = () => {
+    navigation.navigate("Details");
+  }
+
   const handleDeleteAllAlert = () => {
     Alert.alert("Delete all?", "Are you sure you want to delete all goals?", [
       {
@@ -69,7 +73,7 @@ export default function Home() {
           contentContainerStyle={styles.scrollViewContent}
           data={goals}
           renderItem={({ item }) => (
-            <GoalItem item={item} deleteHandler={handleGoalDelete} />
+            <GoalItem item={item} deleteHandler={handleGoalDelete} pressHandler={handleGoalPress} />
           )}
           ListEmptyComponent={
             <Text style={styles.listText}>No goals to show</Text>
