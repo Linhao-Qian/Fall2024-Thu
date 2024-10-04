@@ -1,7 +1,15 @@
 import { Button, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import {useEffect} from 'react'
 
 export default function GoalDetails({navigation, route}) {
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button title="Warning" onPress={() => {console.log("warning")}} />
+      )
+    })
+  }, [])
+
   const moreDetailsHandler = () => {
     navigation.push("Details");
   }
