@@ -13,6 +13,7 @@ export default function GoalItem({ goalObj, deleteHandler }) {
   return (
     <View style={styles.textContainer}>
       <Pressable
+        android_ripple={{color: 'lightblue', radius: 100}}
         style= {styles.horizontalStyle}
         onPress={() => navigation.navigate("Details", { goalObj })}
       >
