@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import PressableButton from "./PressableButton";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-export default function GoalItem({ goalObj, deleteHandler }) {
+export default function GoalItem({ goalObj, deleteHandler, highlight, unhighlight }) {
   const navigation = useNavigation();
 
   const handleDelete = () => {
@@ -30,6 +30,8 @@ export default function GoalItem({ goalObj, deleteHandler }) {
         style= {({pressed}) => [styles.horizontalContainer, pressed && styles.pressedStyle]}
         onPress={() => navigation.navigate("Details", { goalObj })}
         onLongPress={handleLongPress}
+        onPressIn={highlight}
+        onPressOut={unhighlight}
       >
         <Text style={styles.text}>{goalObj.text}</Text>
         <PressableButton
