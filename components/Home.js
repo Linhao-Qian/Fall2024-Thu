@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Header from './Header';
 import Input from './Input';
 import GoalItem from "./GoalItem";
+import PressableButton from "./PressableButton";
 
 export default function Home({navigation}) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -56,7 +57,12 @@ export default function Home({navigation}) {
       <StatusBar style="auto" />
       <View style={styles.topView}>
         <Header name={appName} />
-        <Button title="Add a Goal" onPress={() => setIsModalVisible(true)} />
+        <PressableButton
+          pressedFunction={() => setIsModalVisible(true)}
+          componentStyle={{backgroundColor: 'purple'}}
+        >
+          <Text style={styles.buttonText}>Add a Goal</Text>
+        </PressableButton>
       </View>
       <Input
         shouldAutoFocus={true}
@@ -132,4 +138,9 @@ const styles = StyleSheet.create({
     height: 5,
     backgroundColor: "#777",
   },
+  buttonText: {
+    color: 'white',
+    fontSize: 20,
+    padding: 5
+  }
 });

@@ -8,7 +8,7 @@ export default function PressableButton({children, pressedFunction, componentSty
       style={({pressed}) => [
         styles.defaultStyle,
         componentStyle,
-        pressed && defaultPressedStyle,
+        pressed && styles.defaultPressedStyle,
         pressed && pressedStyle
       ]}
     >
