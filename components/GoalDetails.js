@@ -1,5 +1,7 @@
 import { Button, StyleSheet, Text, View } from 'react-native'
 import { useEffect, useState } from 'react'
+import PressableButton from './PressableButton';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function GoalDetails({navigation, route}) {
   const [isWarning, setIsWarning] = useState(false);
@@ -13,7 +15,9 @@ export default function GoalDetails({navigation, route}) {
     navigation.setOptions({
       title: route.params ? route.params.goalObj.text : "More Details",
       headerRight: () => (
-        <Button title="Warning" onPress={handleWarning} />
+        <PressableButton pressedFunction={handleWarning} componentStyle={{backgroundColor: 'purple'}}>
+          <MaterialIcons name="warning-amber" size={24} color="white" />
+        </PressableButton>
       )
     })
   }, [])
