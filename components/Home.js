@@ -5,11 +5,13 @@ import Header from './Header';
 import Input from './Input';
 import GoalItem from "./GoalItem";
 import PressableButton from "./PressableButton";
+import { writeToDB } from "../Firebase/firestoreHelper";
 
 export default function Home({navigation}) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
   const appName = "My app";
+  const collectionName = "goals";
 
   const handleAlert = () => {
     Alert.alert(
@@ -29,7 +31,8 @@ export default function Home({navigation}) {
 
   const handleInputData = (data) => {
     console.log("App ", data);
-    let newGoal = { text: data, id: Math.random() };
+    let newGoal = { text: data };
+    writeToDB(newGoal, collectionName);
     setGoals((prevGoals) => [...prevGoals, newGoal]);
     setIsModalVisible(false);
   };
