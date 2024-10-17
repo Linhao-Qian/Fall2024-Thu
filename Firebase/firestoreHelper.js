@@ -3,6 +3,11 @@ import { database } from "./firebaseSetup";
 
 export async function writeToDB(data, collectionName) {
   try {
+    // The method addDoc automatically generates a new unique ID for the document,
+    // while the method setDoc must specify an ID for the document to create.
+    // Given that the goals to add do not have predefined IDs, the method addDoc is more suitable.
+    // A specific scenario where setDoc would be appropriate is that we want to set predefined IDs for the goals,
+    // or a specific goal needs to be updated or replaced according to its ID.
     const docRef = await addDoc(collection(database, collectionName), data);
     console.log(docRef);
   } catch (err) {
