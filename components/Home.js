@@ -1,15 +1,29 @@
 import { StatusBar } from "expo-status-bar";
 import { Alert, Button, SafeAreaView, FlatList, StyleSheet, Text, View } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from './Header';
 import Input from './Input';
 import GoalItem from "./GoalItem";
 import PressableButton from "./PressableButton";
+import { deleteAllFromDB, deleteFromDB, writeToDB } from "../Firebase/firestoreHelper";
+import { collection, onSnapshot } from "firebase/firestore";
+import { database } from "../Firebase/firebaseSetup";
 
 export default function Home({navigation}) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
   const appName = "My app";
+  const collectionName = "goals";
+
+  useEffect(() => {
+    onSnapshot(collection(database, collectionName), (querySnapshot) => {
+      let newArray = [];
+      querySnapshot.forEach(docSnapshot => {
+        newArray.push({...docSnapshot.data(), id: docSnapshot.id});
+      })
+      setGoals(newArray);
+    })
+  }, [])
 
   const handleAlert = () => {
     Alert.alert(
@@ -29,15 +43,13 @@ export default function Home({navigation}) {
 
   const handleInputData = (data) => {
     console.log("App ", data);
-    let newGoal = { text: data, id: Math.random() };
-    setGoals((prevGoals) => [...prevGoals, newGoal]);
+    let newGoal = { text: data };
+    writeToDB(newGoal, collectionName);
     setIsModalVisible(false);
   };
 
   const handleGoalDelete = (deletedId) => {
-    setGoals((prevGoals) =>
-      prevGoals.filter((goalObj) => goalObj.id != deletedId)
-    );
+    deleteFromDB(deletedId, collectionName);
   };
 
   const handleDeleteAllAlert = () => {
@@ -47,7 +59,7 @@ export default function Home({navigation}) {
       },
       {
         text: "yes",
-        onPress: () => setGoals([]),
+        onPress: () => deleteAllFromDB(collectionName),
       },
     ]);
   };
