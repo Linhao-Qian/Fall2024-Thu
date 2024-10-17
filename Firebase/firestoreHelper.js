@@ -36,6 +36,9 @@ export async function deleteAllFromDB(collectionName) {
 
 export async function updateInDB(data, docId, collectionName) {
   try {
+    // Both updateDoc and setDoc with {merge: true} can update some fields of a document without overwriting the entire document,
+    // but when the document does not exist, updateDoc will fail while setDoc with {merge: true} will create a new document.
+    // I think the former is more suitable for the case, so I choose updateDoc.
     await updateDoc(doc(database, collectionName, docId), data);
   } catch (err) {
     console.log("Update in DB ", err);
