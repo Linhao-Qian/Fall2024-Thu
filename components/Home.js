@@ -5,7 +5,7 @@ import Header from './Header';
 import Input from './Input';
 import GoalItem from "./GoalItem";
 import PressableButton from "./PressableButton";
-import { writeToDB } from "../Firebase/firestoreHelper";
+import { deleteFromDB, writeToDB } from "../Firebase/firestoreHelper";
 import { collection, onSnapshot } from "firebase/firestore";
 import { database } from "../Firebase/firebaseSetup";
 
@@ -49,9 +49,7 @@ export default function Home({navigation}) {
   };
 
   const handleGoalDelete = (deletedId) => {
-    setGoals((prevGoals) =>
-      prevGoals.filter((goalObj) => goalObj.id != deletedId)
-    );
+    deleteFromDB(deletedId, collectionName);
   };
 
   const handleDeleteAllAlert = () => {
