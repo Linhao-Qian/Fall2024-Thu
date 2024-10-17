@@ -16,13 +16,14 @@ export default function Home({navigation}) {
   const collectionName = "goals";
 
   useEffect(() => {
-    onSnapshot(collection(database, collectionName), (querySnapshot) => {
+    const unsubscribe = onSnapshot(collection(database, collectionName), (querySnapshot) => {
       let newArray = [];
       querySnapshot.forEach(docSnapshot => {
         newArray.push({...docSnapshot.data(), id: docSnapshot.id});
       })
       setGoals(newArray);
     })
+    return () => unsubscribe();
   }, [])
 
   const handleAlert = () => {
