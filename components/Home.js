@@ -74,8 +74,13 @@ export default function Home({navigation}) {
         <FlatList
           contentContainerStyle={styles.scrollViewContent}
           data={goals}
-          renderItem={({ item }) => (
-            <GoalItem goalObj={item} deleteHandler={handleGoalDelete} />
+          renderItem={({ item, separators }) => (
+            <GoalItem
+              goalObj={item}
+              deleteHandler={handleGoalDelete}
+              highlight={separators.highlight}
+              unhighlight={separators.unhighlight}
+            />
           )}
           ListEmptyComponent={
             <Text style={styles.listText}>No goals to show</Text>
@@ -90,7 +95,9 @@ export default function Home({navigation}) {
               </View>
             )
           }
-          ItemSeparatorComponent={<View style={styles.separatorLine} />}
+          ItemSeparatorComponent={({highlighted}) => 
+            <View style={[styles.separatorLine, highlighted && {backgroundColor: 'purple'}]} />
+          }
         />
         {/* <ScrollView contentContainerStyle={styles.scrollViewContent}>
             {goals.map((goalObj) => (

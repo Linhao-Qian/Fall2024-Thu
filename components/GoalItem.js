@@ -1,11 +1,27 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import PressableButton from "./PressableButton";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-export default function GoalItem({ goalObj, deleteHandler }) {
+export default function GoalItem({ goalObj, deleteHandler, highlight, unhighlight }) {
   const navigation = useNavigation();
+
+  const handleDelete = () => {
+    deleteHandler(goalObj.id);
+  }
+
+  const handleLongPress = () => {
+    Alert.alert("Delete", "Are you sure you want to delete this item?", [
+      {
+        text: "No",
+      },
+      {
+        text: "Yes",
+        onPress: handleDelete,
+      },
+    ]);
+  }
 
   return (
     <View style={styles.textContainer}>
@@ -13,10 +29,13 @@ export default function GoalItem({ goalObj, deleteHandler }) {
         android_ripple={{color: 'white', radius: 20}}
         style= {({pressed}) => [styles.horizontalContainer, pressed && styles.pressedStyle]}
         onPress={() => navigation.navigate("Details", { goalObj })}
+        onLongPress={handleLongPress}
+        onPressIn={highlight}
+        onPressOut={unhighlight}
       >
         <Text style={styles.text}>{goalObj.text}</Text>
         <PressableButton
-          pressedFunction={() => deleteHandler(goalObj.id)}
+          pressedFunction={handleDelete}
           componentStyle={styles.deleteContainer}
           pressedStyle={styles.pressedStyle}
         >
