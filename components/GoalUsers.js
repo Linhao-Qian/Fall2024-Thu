@@ -12,7 +12,7 @@ export default function GoalUsers() {
           throw new Error(`HTTP error happened with status ${response.status}`);
         }
         const data = await response.json();
-        setUsers(data);
+        setUsers(data.map(user => user.name));
       } catch (err) {
         console.error("fetch users data ", err);
       }
@@ -22,7 +22,7 @@ export default function GoalUsers() {
 
   return (
     <View>
-      <FlatList data={users} />
+      <FlatList data={users} renderItem={({item}) => <Text>{item}</Text>} />
     </View>
   )
 }
