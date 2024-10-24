@@ -2,12 +2,15 @@ import { Button, StyleSheet, Text, View } from 'react-native'
 import { useEffect, useState } from 'react'
 import PressableButton from './PressableButton';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { updateInDB } from '../Firebase/firestoreHelper';
 
 export default function GoalDetails({navigation, route}) {
   const [isWarning, setIsWarning] = useState(false);
+  const collectionName = "goals";
 
   const handleWarning = () => {
     setIsWarning(true);
+    updateInDB({ warning: true }, route.params.goalObj.id, collectionName)
     navigation.setOptions({ title: "Warning!" });
   }
 
