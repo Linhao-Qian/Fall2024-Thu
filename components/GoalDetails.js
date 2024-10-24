@@ -36,7 +36,7 @@ export default function GoalDetails({navigation, route}) {
         {route.params ? `Details of ${route.params.goalObj.text} goal with ${route.params.goalObj.id}` : "More details"}
       </Text>
       <Button title="More Details" onPress={moreDetailsHandler} />
-      <GoalUsers />
+      <GoalUsers id={route.params.goalObj.id} />
     </View>
   )
 }
