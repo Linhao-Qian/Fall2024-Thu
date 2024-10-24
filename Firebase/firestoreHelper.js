@@ -18,6 +18,7 @@ export async function writeToDB(data, collectionName) {
 export async function deleteFromDB(deletedId, collectionName) {
   try {
     await deleteDoc(doc(database, collectionName, deletedId));
+    deleteAllFromDB(`goals/${deletedId}/users`);
   } catch (err) {
     console.log("Delete from DB ", err);
   }
