@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import PressableButton from './PressableButton';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { updateInDB } from '../Firebase/firestoreHelper';
+import GoalUsers from './GoalUsers';
 
 export default function GoalDetails({navigation, route}) {
   const [isWarning, setIsWarning] = useState(false);
@@ -35,6 +36,7 @@ export default function GoalDetails({navigation, route}) {
         {route.params ? `Details of ${route.params.goalObj.text} goal with ${route.params.goalObj.id}` : "More details"}
       </Text>
       <Button title="More Details" onPress={moreDetailsHandler} />
+      {route.params && <GoalUsers id={route.params.goalObj.id} />}
     </View>
   )
 }
