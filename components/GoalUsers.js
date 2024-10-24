@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { writeToDB } from '../Firebase/firestoreHelper';
+import { readAllDocs, writeToDB } from '../Firebase/firestoreHelper';
 
 export default function GoalUsers({id}) {
   const [users, setUsers] = useState([]);
@@ -8,6 +8,14 @@ export default function GoalUsers({id}) {
   useEffect(() => {
     async function fetchData() {
       try {
+        const dataFromDB = await readAllDocs(`goals/${id}/users`);
+        console.log(dataFromDB);
+        if (dataFromDB.length) {
+          console.log("reading data from DB");
+          setUsers(dataFromDB.map((user) => user.name));
+          return;
+        }
+        console.log("reading data from API");
         const response = await fetch("https://jsonplaceholder.typicode.com/users");
         if (!response.ok) {
           throw new Error(`HTTP error happened with status ${response.status}`);

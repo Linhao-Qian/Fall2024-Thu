@@ -44,3 +44,18 @@ export async function updateInDB(data, docId, collectionName) {
     console.log("Update in DB ", err);
   }
 }
+
+export async function readAllDocs(collectionName) {
+  try {
+    const querySnapshot = await getDocs(collection(database, collectionName));
+    const data = [];
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach((docSnap) => {
+        data.push(docSnap.data());
+      });
+    }
+    return data;
+  } catch (err) {
+    console.log("get all docs ", err);
+  }
+}
