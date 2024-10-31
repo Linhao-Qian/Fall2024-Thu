@@ -23,9 +23,9 @@ export default function Signup({ navigation }) {
         return;
       }
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(userCred);
+      console.log(userCred.user);
     } catch (err) {
-        console.log("sign up ", err);
+      console.log("sign up ", err);
       if (err.code === "auth/weeak-password") {
         Alert.alert("Password should be at least 6 characters");
       }
