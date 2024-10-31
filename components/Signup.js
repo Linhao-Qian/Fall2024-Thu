@@ -1,5 +1,7 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { auth } from "../Firebase/firebaseSetup";
 
 export default function Signup({ navigation }) {
   const [email, setEmail] = useState("");
@@ -9,7 +11,28 @@ export default function Signup({ navigation }) {
   const loginHandler = () => {
     navigation.replace("Login");
   };
-  const signupHandler = async () => {};
+
+  const signupHandler = async () => {
+    try {
+      if (password !== confirmPassword) {
+        Alert.alert("password and confirm password should match");
+        return;
+      }
+      if (email.length === 0 || password.length === 0 || confirmPassword.length === 0) {
+        Alert.alert("No field should be empty");
+        return;
+      }
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(userCred);
+    } catch (err) {
+        console.log("sign up ", err);
+      if (err.code === "auth/weeak-password") {
+        Alert.alert("Password should be at least 6 characters");
+      }
+      Alert.alert(err.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Email</Text>
