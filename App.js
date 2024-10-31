@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./Firebase/firebaseSetup";
 import Profile from "./components/Profile";
 import PressableButton from "./components/PressableButton";
@@ -37,20 +37,45 @@ const AppStack = <>
     }
   />
   <Stack.Screen name="Details" component={GoalDetails} />
-  <Stack.Screen name="Profile" component={Profile} />
+  <Stack.Screen
+    name="Profile"
+    component={Profile}
+    options={{
+      headerRight: () => {
+        return (
+          <PressableButton
+            componentStyle={{ backgroundColor: "purple" }}
+            pressedFunction={() => {
+              try {
+                signOut(auth);
+              } catch (err) {
+                console.log("sign out", err);
+              }
+            }}
+          >
+            <AntDesign name="logout" size={24} color="white" />
+          </PressableButton>
+        );
+      },
+    }}
+  />
 </>
 
 export default function App() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsUserLoggedIn(true);
       } else {
         setIsUserLoggedIn(false);
       }
     });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return (
