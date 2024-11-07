@@ -19,7 +19,8 @@ import {
   writeToDB,
 } from "../Firebase/firestoreHelper";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { auth, database } from "../Firebase/firebaseSetup";
+import { auth, database, storage } from "../Firebase/firebaseSetup";
+import { ref, uploadBytesResumable } from "firebase/storage";
 
 export default function Home({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -48,6 +49,21 @@ export default function Home({ navigation }) {
     return () => unsubscribe();
   }, []);
 
+  const handleImageData = async uri => {
+    try {
+      const responst = await fetch(uri);
+      if(!response.ok) {
+        throw new Error(`fetch error happened with status ${response.status}`);
+      }
+      const blob = await response.blob();
+      const imageName = uri.substring(uri.lastIndexOf('/') + 1);
+      const imageRef = await ref(storage, `images/${imageName}`)
+      const uploadResult = await uploadBytesResumable(imageRef, blob);
+    } catch (error) {
+      console.log("handle image data ", error);
+    }
+  }
+  
   const handleAlert = () => {
     Alert.alert(
       "Dismiss the modal?",
@@ -69,6 +85,9 @@ export default function Home({ navigation }) {
     let newGoal = { text: data.text };
     newGoal = { ...newGoal, owner: auth.currentUser.uid };
     writeToDB(newGoal, collectionName);
+    if (data.imageUri) {
+      handleImageData(data.imageUri);
+    }
     setIsModalVisible(false);
   };
 
