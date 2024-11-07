@@ -2,7 +2,7 @@ import { Alert, Button, Image, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 
-export default function ImageManager() {
+export default function ImageManager({ receiveImageUri }) {
   const [response, requestPermission] = ImagePicker.useCameraPermissions();
   const [imageUri, setImageUri] = useState("");
 
@@ -29,9 +29,9 @@ export default function ImageManager() {
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
       });
-      console.log(result);
       if (!result.canceled) {
         setImageUri(result.assets[0].uri);
+        receiveImageUri(result.assets[0].uri);
       }
     } catch (err) {
       console.log("take image ", err);

@@ -66,7 +66,7 @@ export default function Home({ navigation }) {
 
   const handleInputData = (data) => {
     console.log("App ", data);
-    let newGoal = { text: data };
+    let newGoal = { text: data.text };
     newGoal = { ...newGoal, owner: auth.currentUser.uid };
     writeToDB(newGoal, collectionName);
     setIsModalVisible(false);
