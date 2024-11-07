@@ -1,18 +1,25 @@
 import { Button, Image, Modal, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
+import ImageManager from './ImageManager';
 
 export default function Input({shouldAutoFocus, cancelHandler, inputHandler, isModalVisible}) {
   const [text, setText] = useState("");
   const [isFocused, setIsFocused] = useState(shouldAutoFocus);
+  const [imageUri, setImageUri] = useState("");
 
   const handleConfirm = () => {
     setText("");
-    inputHandler(text);
+    inputHandler({ text, imageUri });
   }
 
   const handleCancel = () => {
     setText("");
     cancelHandler();
+  }
+
+  const receiveImageUri = uri => {
+    console.log("In Input ", uri);
+    setImageUri(uri);
   }
 
   return (
@@ -38,6 +45,7 @@ export default function Input({shouldAutoFocus, cancelHandler, inputHandler, isM
             onBlur={() => {setIsFocused(false)}}
           />
           <Text>{isFocused ? (text.length || "") : (text.length < 3 ? "Please type more than 3 characters" : "Thank you")}</Text>
+          <ImageManager receiveImageUri={receiveImageUri} />
           <View style={styles.buttonGroups}>
             <View style={styles.buttonContainer}>
               <Button title="Cancel" onPress={handleCancel} />

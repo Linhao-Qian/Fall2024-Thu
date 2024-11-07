@@ -1,31 +1,69 @@
 import { StatusBar } from "expo-status-bar";
-import { Alert, Button, SafeAreaView, FlatList, StyleSheet, Text, View } from 'react-native';
-import { useEffect, useState } from 'react';
-import Header from './Header';
-import Input from './Input';
+import {
+  Alert,
+  Button,
+  SafeAreaView,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useEffect, useState } from "react";
+import Header from "./Header";
+import Input from "./Input";
 import GoalItem from "./GoalItem";
 import PressableButton from "./PressableButton";
-import { deleteAllFromDB, deleteFromDB, writeToDB } from "../Firebase/firestoreHelper";
-import { collection, onSnapshot } from "firebase/firestore";
-import { database } from "../Firebase/firebaseSetup";
+import {
+  deleteAllFromDB,
+  deleteFromDB,
+  writeToDB,
+} from "../Firebase/firestoreHelper";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { auth, database, storage } from "../Firebase/firebaseSetup";
+import { ref, uploadBytesResumable } from "firebase/storage";
 
-export default function Home({navigation}) {
+export default function Home({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
   const appName = "My app";
   const collectionName = "goals";
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(database, collectionName), (querySnapshot) => {
-      let newArray = [];
-      querySnapshot.forEach(docSnapshot => {
-        newArray.push({...docSnapshot.data(), id: docSnapshot.id});
-      })
-      setGoals(newArray);
-    })
+    const unsubscribe = onSnapshot(
+      query(
+        collection(database, collectionName),
+        where("owner", "==", auth.currentUser.uid)
+      ),
+      (querySnapshot) => {
+        let newArray = [];
+        querySnapshot.forEach((docSnapshot) => {
+          newArray.push({ ...docSnapshot.data(), id: docSnapshot.id });
+        });
+        setGoals(newArray);
+      },
+      (error) => {
+        console.log(error);
+        Alert.alert(error.message);
+      }
+    );
     return () => unsubscribe();
-  }, [])
+  }, []);
 
+  const handleImageData = async uri => {
+    try {
+      const responst = await fetch(uri);
+      if(!response.ok) {
+        throw new Error(`fetch error happened with status ${response.status}`);
+      }
+      const blob = await response.blob();
+      const imageName = uri.substring(uri.lastIndexOf('/') + 1);
+      const imageRef = await ref(storage, `images/${imageName}`)
+      const uploadResult = await uploadBytesResumable(imageRef, blob);
+    } catch (error) {
+      console.log("handle image data ", error);
+    }
+  }
+  
   const handleAlert = () => {
     Alert.alert(
       "Dismiss the modal?",
@@ -44,8 +82,12 @@ export default function Home({navigation}) {
 
   const handleInputData = (data) => {
     console.log("App ", data);
-    let newGoal = { text: data };
+    let newGoal = { text: data.text };
+    newGoal = { ...newGoal, owner: auth.currentUser.uid };
     writeToDB(newGoal, collectionName);
+    if (data.imageUri) {
+      handleImageData(data.imageUri);
+    }
     setIsModalVisible(false);
   };
 
@@ -72,7 +114,7 @@ export default function Home({navigation}) {
         <Header name={appName} />
         <PressableButton
           pressedFunction={() => setIsModalVisible(true)}
-          componentStyle={{backgroundColor: 'purple'}}
+          componentStyle={{ backgroundColor: "purple" }}
         >
           <Text style={styles.buttonText}>Add a Goal</Text>
         </PressableButton>
@@ -108,9 +150,14 @@ export default function Home({navigation}) {
               </View>
             )
           }
-          ItemSeparatorComponent={({highlighted}) => 
-            <View style={[styles.separatorLine, highlighted && {backgroundColor: 'purple'}]} />
-          }
+          ItemSeparatorComponent={({ highlighted }) => (
+            <View
+              style={[
+                styles.separatorLine,
+                highlighted && { backgroundColor: "purple" },
+              ]}
+            />
+          )}
         />
         {/* <ScrollView contentContainerStyle={styles.scrollViewContent}>
             {goals.map((goalObj) => (
@@ -159,8 +206,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#777",
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 20,
-    padding: 5
-  }
+    padding: 5,
+  },
 });
