@@ -6,22 +6,21 @@ import { auth } from "../Firebase/firebaseSetup";
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
   const signupHandler = () => {
+    // go to signup
     navigation.replace("Signup");
   };
-
   const loginHandler = async () => {
-    if (email.length === 0 || password.length === 0) {
-      Alert.alert("No field should be empty");
-      return;
-    }
+    // data validation?
     try {
+      if (email.length === 0 || password.length === 0) {
+        Alert.alert("No field should be empty");
+        return;
+      }
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       console.log(userCred.user);
     } catch (err) {
       console.log("login ", err);
-      Alert.alert(err.message);
     }
   };
 

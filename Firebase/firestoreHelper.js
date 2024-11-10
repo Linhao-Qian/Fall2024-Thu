@@ -1,13 +1,15 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 import { database } from "./firebaseSetup";
 
 export async function writeToDB(data, collectionName) {
   try {
-    // The method addDoc automatically generates a new unique ID for the document,
-    // while the method setDoc must specify an ID for the document to create.
-    // Given that the goals to add do not have predefined IDs, the method addDoc is more suitable.
-    // A specific scenario where setDoc would be appropriate is that we want to set predefined IDs for the goals,
-    // or a specific goal needs to be updated or replaced according to its ID.
     const docRef = await addDoc(collection(database, collectionName), data);
     console.log(docRef);
   } catch (err) {
@@ -15,12 +17,20 @@ export async function writeToDB(data, collectionName) {
   }
 }
 
-export async function deleteFromDB(deletedId, collectionName) {
+export async function deleteFromDB(deleteId, collectionName) {
   try {
-    await deleteDoc(doc(database, collectionName, deletedId));
-    deleteAllFromDB(`goals/${deletedId}/users`);
+    await deleteDoc(doc(database, collectionName, deleteId));
+    //we have also delete all docs in a the users subcollection
+    deleteAllFromDB(`goals/${deleteId}/users`);
   } catch (err) {
-    console.log("Delete from DB ", err);
+    console.log("delete from db ", err);
+  }
+}
+export async function updateDB(id, data, collectionName) {
+  try {
+    await setDoc(doc(database, collectionName, id), data, { merge: true });
+  } catch (err) {
+    console.log("update DB ", err);
   }
 }
 
@@ -28,35 +38,23 @@ export async function deleteAllFromDB(collectionName) {
   try {
     const querySnapshot = await getDocs(collection(database, collectionName));
     querySnapshot.forEach((docSnapshot) => {
-      deleteDoc(doc(database, collectionName, docSnapshot.id));
-    })
+      deleteFromDB(docSnapshot.id, collectionName);
+    });
+    //delete all docs in users subcollection
   } catch (err) {
-    console.log("Delete all ", err);
-  }
-}
-
-export async function updateInDB(data, docId, collectionName) {
-  try {
-    // Both updateDoc and setDoc with {merge: true} can update some fields of a document without overwriting the entire document,
-    // but when the document does not exist, updateDoc will fail while setDoc with {merge: true} will create a new document.
-    // I think the former is more suitable for the case, so I choose updateDoc.
-    await updateDoc(doc(database, collectionName, docId), data);
-  } catch (err) {
-    console.log("Update in DB ", err);
+    console.log("delete all", err);
   }
 }
 
 export async function readAllDocs(collectionName) {
   try {
     const querySnapshot = await getDocs(collection(database, collectionName));
-    const data = [];
-    if (!querySnapshot.empty) {
-      querySnapshot.forEach((docSnap) => {
-        data.push(docSnap.data());
-      });
-    }
-    return data;
+    let newArray = [];
+    querySnapshot.forEach((docSnap) => {
+      newArray.push(docSnap.data());
+    });
+    return newArray;
   } catch (err) {
-    console.log("get all docs ", err);
+    console.log("read all docs ", err);
   }
 }

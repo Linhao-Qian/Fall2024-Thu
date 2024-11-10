@@ -9,30 +9,42 @@ export default function Signup({ navigation }) {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const loginHandler = () => {
+    // go to login
     navigation.replace("Login");
   };
-
   const signupHandler = async () => {
     try {
+      // do some data validation
+      // no field should be empty
+      // valid email address @ .
+      // password and confirm password match
       if (password !== confirmPassword) {
-        Alert.alert("password and confirm password should match");
+        Alert.alert("Password and confirm password should match");
         return;
       }
-      if (email.length === 0 || password.length === 0 || confirmPassword.length === 0) {
+      if (
+        email.length === 0 ||
+        password.length === 0 ||
+        confirmPassword.length === 0
+      ) {
         Alert.alert("No field should be empty");
         return;
       }
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(userCred.user);
+      const userCred = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log(userCred);
     } catch (err) {
-      console.log("sign up ", err);
-      if (err.code === "auth/weeak-password") {
-        Alert.alert("Password should be at least 6 characters");
+      console.log("Sign up ", err.code);
+      // tell user if an error happens
+      if (err.code === "auth/weak-password") {
+        Alert.alert("Your password should be at least    6 characters");
       }
       Alert.alert(err.message);
     }
   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Email</Text>
@@ -74,6 +86,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    // alignItems: "stretch",
     justifyContent: "center",
   },
   input: {

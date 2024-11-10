@@ -1,68 +1,116 @@
-import { Button, Image, Modal, StyleSheet, Text, TextInput, View } from 'react-native'
-import React, { useState } from 'react'
-import ImageManager from './ImageManager';
+import {
+  Button,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Image,
+  Alert,
+} from "react-native";
+import React, { useState } from "react";
+import ImageManager from "./ImageManager";
 
-export default function Input({shouldAutoFocus, cancelHandler, inputHandler, isModalVisible}) {
+export default function Input({
+  textInputFocus,
+  inputHandler,
+  modalVisible,
+  dismissModal,
+}) {
   const [text, setText] = useState("");
-  const [isFocused, setIsFocused] = useState(shouldAutoFocus);
+  const [blur, setBlur] = useState(false);
   const [imageUri, setImageUri] = useState("");
+  const minimumChar = 3;
 
-  const handleConfirm = () => {
-    setText("");
-    inputHandler({ text, imageUri });
+  function updateText(changedText) {
+    setText(changedText);
   }
-
-  const handleCancel = () => {
-    setText("");
-    cancelHandler();
-  }
-
-  const receiveImageUri = uri => {
-    console.log("In Input ", uri);
+  function receiveImageUri(uri) {
     setImageUri(uri);
   }
-
+  function handleConfirm() {
+    // call the callback fn received from App.js
+    // pass what user has typed
+    //also send back the imageUri
+    inputHandler({ text, imageUri });
+    setText("");
+  }
+  function handleCancel() {
+    // hide the modal
+    Alert.alert("Cancel", "Are you sure you want to cancel", [
+      { text: "cancel", style: "cancel" },
+      {
+        text: "ok",
+        onPress: () => {
+          setText("");
+          dismissModal();
+        },
+      },
+    ]);
+  }
   return (
-    <Modal animationType="slide" visible={isModalVisible} transparent={true}>
+    <Modal animationType="slide" visible={modalVisible} transparent={true}>
       <View style={styles.container}>
-        {/*
-          Purpose of alt prop:
-            A string that defines an alternative text description of the image,
-            which will be read by the screen reader when the user interacts with it.
-            Using this will automatically mark this element as accessible.
-        */}
         <View style={styles.modalContainer}>
-          <Image source={{uri: "https://cdn-icons-png.flaticon.com/512/2617/2617812.png"}} style={styles.image} alt="network" />
-          <Image source={require("../assets/archery.png")} style={styles.image} alt="local" />
+          <Image
+            source={{
+              uri: "https://cdn-icons-png.flaticon.com/512/2617/2617812.png",
+            }}
+            style={styles.image}
+            alt="Image of a an arrow"
+          />
+          <Image
+            source={require("../assets/goal.png")}
+            style={styles.image}
+            alt="Image of a an arrow"
+          />
+
           <TextInput
-            placeholder="Type Something"
+            autoFocus={textInputFocus}
+            placeholder="Type something"
             keyboardType="default"
             style={styles.input}
             value={text}
-            onChangeText={newText => setText(newText)}
-            autoFocus={shouldAutoFocus}
-            onFocus={() => {setIsFocused(true)}}
-            onBlur={() => {setIsFocused(false)}}
+            onChangeText={updateText}
+            onBlur={() => {
+              setBlur(true);
+            }}
+            onFocus={() => {
+              setBlur(false);
+            }}
           />
-          <Text>{isFocused ? (text.length || "") : (text.length < 3 ? "Please type more than 3 characters" : "Thank you")}</Text>
+          {blur ? (
+            text.length >= minimumChar ? (
+              <Text>Thank you</Text>
+            ) : (
+              <Text>Please type more than {minimumChar} characters</Text>
+            )
+          ) : (
+            text && <Text>{text.length}</Text>
+          )}
           <ImageManager receiveImageUri={receiveImageUri} />
-          <View style={styles.buttonGroups}>
+          <View style={styles.buttonsRow}>
             <View style={styles.buttonContainer}>
               <Button title="Cancel" onPress={handleCancel} />
             </View>
             <View style={styles.buttonContainer}>
-              <Button title="Confirm" onPress={handleConfirm} disabled={text.length < 3} />
+              <Button
+                disabled={text.length < minimumChar}
+                title="Confirm"
+                onPress={handleConfirm}
+              />
             </View>
           </View>
         </View>
       </View>
     </Modal>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     alignItems: "center",
     justifyContent: "center",
   },
@@ -76,17 +124,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 5,
     color: "blue",
-    marginTop: 10,
-  },
-  buttonGroups: {
-    flexDirection: "row",
+    marginVertical: 5,
   },
   buttonContainer: {
     width: "30%",
     margin: 10,
   },
-  image: {
-    width: 100,
-    height: 100,
-  }
-})
+  buttonsRow: { flexDirection: "row" },
+
+  image: { width: 100, height: 100 },
+});

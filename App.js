@@ -1,83 +1,113 @@
 import React, { useEffect, useState } from "react";
-import Home from "./components/Home";
-import GoalDetails from "./components/GoalDetails";
-import { NavigationContainer } from '@react-navigation/native';
+import Home from "./Components/Home";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
+import GoalDetails from "./Components/GoalDetails";
+import { Button } from "react-native";
+import Login from "./Components/Login";
+import Signup from "./Components/Signup";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./Firebase/firebaseSetup";
-import Profile from "./components/Profile";
-import PressableButton from "./components/PressableButton";
+import Profile from "./Components/Profile";
+import PressableButton from "./Components/PressableButton";
+const Stack = createNativeStackNavigator();
 import AntDesign from "@expo/vector-icons/AntDesign";
 
-const Stack = createNativeStackNavigator();
+const AuthStack = (
+  <>
+    <Stack.Screen name="Login" component={Login} />
+    <Stack.Screen name="Signup" component={Signup} />
+  </>
+);
 
-const AuthStack = <>
-  <Stack.Screen name="Signup" component={Signup} />
-  <Stack.Screen name="Login" component={Login} />
-</>
-
-const AppStack = <>
-  <Stack.Screen
-    name="Home"
-    component={Home}
-    options={({ navigation }) => ({
-      title: "My Goals",
-      headerRight: () => 
-        <PressableButton
-          componentStyle={{ backgroundColor: "purple" }}
-          pressedFunction={() => {
-            navigation.navigate("Profile");
-          }}
-        >
-          <AntDesign name="user" size={24} color="white" />
-        </PressableButton>
-      })
-    }
-  />
-  <Stack.Screen name="Details" component={GoalDetails} />
-  <Stack.Screen
-    name="Profile"
-    component={Profile}
-    options={{
-      headerRight: () => {
-        return (
-          <PressableButton
-            componentStyle={{ backgroundColor: "purple" }}
-            pressedFunction={() => {
-              try {
-                signOut(auth);
-              } catch (err) {
-                console.log("sign out", err);
-              }
-            }}
-          >
-            <AntDesign name="logout" size={24} color="white" />
-          </PressableButton>
-        );
-      },
-    }}
-  />
-</>
-
+const AppStack = (
+  <>
+    <Stack.Screen
+      name="Home"
+      component={Home}
+      options={({ navigation }) => {
+        return {
+          title: "All My Goals",
+          headerRight: () => {
+            // render a button icon to navigate to Profile
+            return (
+              <PressableButton
+                pressedFunction={() => {
+                  navigation.navigate("Profile");
+                }}
+                componentStyle={{ backgroundColor: "purple" }}
+              >
+                <AntDesign name="user" size={24} color="white" />
+              </PressableButton>
+            );
+          },
+        };
+      }}
+    />
+    <Stack.Screen
+      name="Details"
+      component={GoalDetails}
+      options={({ navigation, route }) => {
+        return {
+          title: route.params ? route.params.goalObj.text : "More Details",
+          // headerRight: () => {
+          //   return (
+          //     <Button
+          //       title="Warning"
+          //       onPress={() => {
+          //         console.log("warning");
+          //       }}
+          //     />
+          //   );
+          // },
+        };
+      }}
+    />
+    <Stack.Screen
+      name="Profile"
+      component={Profile}
+      options={({ navigation }) => {
+        return {
+          headerRight: () => {
+            // render a button icon to navigate to Profile
+            return (
+              <PressableButton
+                pressedFunction={() => {
+                  try {
+                    signOut(auth);
+                  } catch (err) {
+                    console.log("sign out ", err);
+                  }
+                }}
+                componentStyle={{ backgroundColor: "purple" }}
+              >
+                <AntDesign name="logout" size={24} color="white" />
+              </PressableButton>
+            );
+          },
+        };
+      }}
+    />
+  </>
+);
 export default function App() {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-
+  const [isUserLoggedIn, SetIsUserLoggedIn] = useState(false);
   useEffect(() => {
+    //set up auth listener
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("listener ", user);
+      // if user is not logged in we receive null
+      // else we receive user data
       if (user) {
-        setIsUserLoggedIn(true);
+        SetIsUserLoggedIn(true);
       } else {
-        setIsUserLoggedIn(false);
+        SetIsUserLoggedIn(false);
       }
     });
-
     return () => {
       unsubscribe();
     };
   }, []);
-
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -87,7 +117,10 @@ export default function App() {
           headerTintColor: "white",
         }}
       >
-        {isUserLoggedIn ? AppStack : AuthStack}
+        {
+          // if user is not logged in show them AuthStack else show them AppStack
+          isUserLoggedIn ? AppStack : AuthStack
+        }
       </Stack.Navigator>
     </NavigationContainer>
   );

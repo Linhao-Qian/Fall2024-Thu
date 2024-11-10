@@ -3,6 +3,7 @@ import React from "react";
 import { auth } from "../Firebase/firebaseSetup";
 
 export default function Profile() {
+  // read auth.currentUser
   return (
     <View>
       <Text>{auth.currentUser.email}</Text>
