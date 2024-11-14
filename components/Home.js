@@ -84,7 +84,7 @@ export default function Home({ navigation }) {
       let newGoal = { text: data.text };
       newGoal = { ...newGoal, owner: auth.currentUser.uid };
       if (imageUri) {
-        newGoal = { ...newGoal, image: imageUri };
+        newGoal = { ...newGoal, imageUri };
       } 
       // add the newGoal to db
       //call writeToDB
