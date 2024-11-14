@@ -1,9 +1,11 @@
 import { Alert, Button, Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import * as Location from "expo-location";
+import { useNavigation } from "@react-navigation/native";
 const windowWidth = Dimensions.get("window").width;
 
 export default function LocationManager() {
+  const navigation = useNavigation();
   const [location, setLocation] = useState(null);
   const [response, requestPermission] = Location.useForegroundPermissions();
   async function verifyPermission() {
@@ -36,9 +38,16 @@ export default function LocationManager() {
       console.log("locate user ", err);
     }
   }
+  function chooseLocationHandler() {
+    navigation.navigate("Map");
+  }
   return (
     <View>
       <Button title="Locate Me" onPress={locateUserHandler} />
+      <Button
+        title="Let me choose on the map"
+        onPress={chooseLocationHandler}
+      />
       {location && (
         <Image
           source={{

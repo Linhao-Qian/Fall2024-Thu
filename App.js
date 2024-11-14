@@ -12,6 +12,7 @@ import Profile from "./Components/Profile";
 import PressableButton from "./Components/PressableButton";
 const Stack = createNativeStackNavigator();
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Map from "./Components/Map";
 
 const AuthStack = (
   <>
@@ -88,6 +89,7 @@ const AppStack = (
         };
       }}
     />
+    <Stack.Screen name="Map" component={Map} />
   </>
 );
 export default function App() {
