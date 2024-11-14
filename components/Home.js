@@ -65,33 +65,42 @@ export default function Home({ navigation }) {
       const imageRef = ref(storage, `images/${imageName}`);
       const uploadResult = await uploadBytesResumable(imageRef, blob);
       console.log(uploadResult);
+      return uploadResult.metadata.fullPath;
     } catch (err) {
       console.log("handle Image data ", err);
     }
   }
   //update this fn to receive data
   //data is an object with text and imageUri properties
-  function handleInputData(data) {
-    //log the data to console
-    console.log("App ", data);
-    if (data.imageUri) {
-      handleImageData(data.imageUri);
+  async function handleInputData(data) {
+    try {
+      //log the data to console
+      console.log("App ", data);
+      let imageUri = "";
+      if (data.imageUri) {
+        imageUri = await handleImageData(data.imageUri);
+      }
+      // declare a JS object
+      let newGoal = { text: data.text };
+      newGoal = { ...newGoal, owner: auth.currentUser.uid };
+      if (imageUri) {
+        newGoal = { ...newGoal, imageUri };
+      } 
+      // add the newGoal to db
+      //call writeToDB
+      writeToDB(newGoal, collectionName);
+
+      // update the goals array to have newGoal as an item
+      //async
+
+      // setGoals((prevGoals) => {
+      //   return [...prevGoals, newGoal];
+      // });
+      //updated goals is not accessible here
+      setIsModalVisible(false);
+    } catch (error) {
+      
     }
-    // declare a JS object
-    let newGoal = { text: data.text };
-    newGoal = { ...newGoal, owner: auth.currentUser.uid };
-    // add the newGoal to db
-    //call writeToDB
-    writeToDB(newGoal, collectionName);
-
-    // update the goals array to have newGoal as an item
-    //async
-
-    // setGoals((prevGoals) => {
-    //   return [...prevGoals, newGoal];
-    // });
-    //updated goals is not accessible here
-    setIsModalVisible(false);
   }
   function dismissModal() {
     setIsModalVisible(false);
