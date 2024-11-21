@@ -3,17 +3,23 @@ import Home from "./Components/Home";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import GoalDetails from "./Components/GoalDetails";
-import { Button } from "react-native";
 import Login from "./Components/Login";
 import Signup from "./Components/Signup";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./Firebase/firebaseSetup";
 import Profile from "./Components/Profile";
 import PressableButton from "./Components/PressableButton";
-const Stack = createNativeStackNavigator();
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Map from "./Components/Map";
+import { setNotificationHandler } from "expo-notifications";
 
+setNotificationHandler({
+  handleNotification: async () => {
+    return { shouldShowAlert: true };
+  },
+});
+
+const Stack = createNativeStackNavigator();
 const AuthStack = (
   <>
     <Stack.Screen name="Login" component={Login} />
@@ -48,21 +54,7 @@ const AppStack = (
     <Stack.Screen
       name="Details"
       component={GoalDetails}
-      options={({ navigation, route }) => {
-        return {
-          title: route.params ? route.params.goalObj.text : "More Details",
-          // headerRight: () => {
-          //   return (
-          //     <Button
-          //       title="Warning"
-          //       onPress={() => {
-          //         console.log("warning");
-          //       }}
-          //     />
-          //   );
-          // },
-        };
-      }}
+      options={({ route }) => ({ title: route.params ? route.params.goalObj.text : "More Details" })}
     />
     <Stack.Screen
       name="Profile"
@@ -92,6 +84,7 @@ const AppStack = (
     <Stack.Screen name="Map" component={Map} />
   </>
 );
+
 export default function App() {
   const [isUserLoggedIn, SetIsUserLoggedIn] = useState(false);
   useEffect(() => {
