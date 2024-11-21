@@ -1,13 +1,18 @@
 import { StyleSheet, Text, Button } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 
-export default function Map({ navigation }) {
+export default function Map({ navigation, route }) {
   const [selectedLocation, setSelectedLocation] = useState(null);
   function confirmHandler() {
     //navigate to Profile and pass selectedLocation as params
     navigation.navigate("Profile", { selectedLocation });
   }
+  useEffect(() => {
+    if (route.params && route.params.initialLocation) {
+      setSelectedLocation(route.params.initialLocation);
+    }
+  }, []);
   return (
     <>
       <MapView
@@ -19,8 +24,8 @@ export default function Map({ navigation }) {
         }}
         style={styles.map}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: selectedLocation ? selectedLocation.latitude : 37.78825,
+          longitude: selectedLocation ? selectedLocation.longitude : -122.4324,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
