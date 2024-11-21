@@ -21,12 +21,21 @@ import {
 } from "../Firebase/firestoreHelper";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { ref, uploadBytesResumable } from "firebase/storage";
+import { getExpoPushTokenAsync } from "expo-notifications";
 
 export default function Home({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
   const appName = "My app";
   const collectionName = "goals";
+  useEffect(() => {
+    console.log("Home use effect");
+    async function getPushToken() {
+      const pushToken = await getExpoPushTokenAsync({});
+      console.log(pushToken);
+    }
+    getPushToken();
+  }, []);
   useEffect(() => {
     //querySnapshot is a list/array of documentSnapshots
     const unsubscribe = onSnapshot(
